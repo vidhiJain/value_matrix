@@ -12,8 +12,8 @@ _goals = np.random.randint(4, size=(40, 2))
 test_goals = _goals[20:]
 
 model = Model()
-# PATH = 'model.pt'
-PATH = 'tmp1_model.pt'
+PATH = 'model.pt'
+
 model.load_state_dict(torch.load(PATH))
 
 for i, j in test_goals:
