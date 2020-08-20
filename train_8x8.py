@@ -7,6 +7,9 @@ import matplotlib.pyplot as plt
 import nav_expert
 from plan_network import Model8x8
 
+use_cuda = torch.cuda.is_available()
+device = "cuda" if use_cuda else "cpu"
+
 max_map_size = 8
 total_goals = max_map_size ** 2
 train_frac = 0.3
@@ -31,7 +34,7 @@ np.save('train_goals', train_goals)
 np.save('val_goals', val_goals)
 np.save('test_goals', test_goals)
 
-model = Model8x8()
+model = Model8x8().to(device)
 criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=1e-4) #, momentum=0.1)
 # scheduler = 
@@ -56,6 +59,9 @@ for epoch in range(30):
                     env[j, 0], batch[j, 0], batch[j, 1], 
                     reward=2, discount_factor=0.99, time_penalty=0.01)
                 ).float()
+
+        env = env.to(device)
+        path_matrices = path_matrices.to(device)
         # path_matrix_tensor = torch.tensor(path_matrix.reshape(1, 1, max_map_size, max_map_size)).float()
         out = model(env)
 
@@ -83,8 +89,10 @@ for epoch in range(30):
                 env[j, 0], val_goals[j, 0], val_goals[j, 1], 
                 reward=2, discount_factor=0.99, time_penalty=0.01)
             ).float()
-        # path_matrix = nav_expert.get_path_matrix(env[, 0], i, j, reward=2, discount_factor=0.99, time_penalty=0.01)
-        # path_matrix_tensor = torch.tensor(path_matrix.reshape(1, 1, max_map_size, max_map_size)).float()
+
+        env = env.to(device)
+        path_matrices = path_matrices.to(device)
+
         out = model(env)
         loss = criterion(out, path_matrices)   
         val_loss.append(loss.item())
@@ -120,7 +128,9 @@ plt.legend()
 plt.ylabel('MSE loss')
 plt.xlabel('Epoch number')
 plt.title('Train and validation loss')
-plt.show()
+plt.savefig('loss_8x8')
+
+# plt.show()
 
 # TODO #: put clutter to it marlgrid
 # TODO : random submap masks

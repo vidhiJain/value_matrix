@@ -20,8 +20,8 @@ class Model8x8(nn.Module):
 class Model51x51(nn.Module):
     def __init__(self):
         super(Model51x51, self).__init__()
-        self.conv1 = nn.Conv2d(1, 2500, 3, padding=1)
-        self.conv2 = nn.Conv2d(2500, 1024, 3, padding=1)
+        self.conv1 = nn.Conv2d(1, 2500, 7, padding=3)
+        self.conv2 = nn.Conv2d(2500, 1024, 5, padding=2)
         self.conv3 = nn.Conv2d(1024, 512, 3, padding=1)
         # self.conv4 = nn.Conv2d(512, 256, 3, padding=1)
         # self.conv5 = nn.Conv2d(256, 128, 3, padding=1)
