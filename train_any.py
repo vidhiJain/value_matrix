@@ -12,7 +12,7 @@ from plan_network import Model51x51
 use_cuda = torch.cuda.is_available()
 device = "cuda" if use_cuda else "cpu"
 
-max_map_size = 51 # 25
+max_map_size = 25
 total_goals = max_map_size ** 2
 train_frac = 0.4
 val_frac = 0.1
